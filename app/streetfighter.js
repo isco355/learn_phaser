@@ -19,16 +19,19 @@ var config = {
 };
 
 var game = new Phaser.Game(config);
- var scene = '../assets/27199.png';
 
  var player;
 
  function preload ()
  {
-   var Iory_spritesheet = '../assets/IoryYagamiv3.png';
-  this.load.image('background',scene);
-  this.load.spritesheet('Iory',Iory_spritesheet , {frameWidth:87,frameHeight:105});
+  this.load.image('background', '../assets/27199.png');
+  this.load.spritesheet('Iory','../assets/IoryYagamiv3.png' , {frameWidth:87,frameHeight:105});
   this.load.image('ground', '../assets/platform.png');
+  this.load.spritesheet('Iorywalk','../assets/Iorywalk.png' , {frameWidth:70,frameHeight:112});
+  this.load.spritesheet('IoryDown','../assets/IoryDown.png' , {frameWidth:87,frameHeight:105});
+  this.load.spritesheet('Iorybeing','../assets/Iorybegin.png' , {frameWidth:87,frameHeight:105});
+
+
 }
 
 
@@ -48,14 +51,22 @@ var game = new Phaser.Game(config);
   platforms.create(590,465,'ground');
   platforms.create(800,465,'ground');
 
+  this.anims.create({
+    key: 'left',
+    frames: this.anims.generateFrameNumbers('Iory',{start : 0, end : 9}),
+    frameRate : 12,
+    repeat : -1
 
+  });
 
   this.anims.create({
     key: 'right',
-    frames: this.anims.generateFrameNumbers('Iory',{start : 0, end: 9 }),
-    frameRate: 12,
-    repeat : -1
+    frames: this.anims.generateFrameNumbers('Iorywalk',{start : 0, end: 10 }),
+    frameRate: 8,
+    repeat : 5
+
 });
+
 
 this.physics.add.collider(player,platforms);
 cursors = this.input.keyboard.createCursorKeys();
@@ -64,14 +75,19 @@ cursors = this.input.keyboard.createCursorKeys();
 function update()
 {
 
-  if (cursors.left.isDown)
+  if (cursors.right.isDown)
 {
-    player.anims.play('right', true);
+    player.anims.play('right', false);
     player.setVelocityX(150);
 
 }
-else if(cursors.left.isUp)
+else if(cursors.left.isDown){
+  player.anims.play('left',false);
+  player.setVelocityX(-150)
+}
+else
 {
+  player.anims.play('left',true)
   player.setVelocityX (0)
 
 }
